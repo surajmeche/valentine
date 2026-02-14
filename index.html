@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no">
+    <title>💕 Valentine's Day 💕</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            overflow: hidden;
+            touch-action: none;
+        }
+
+        .page {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            transition: opacity 0.5s ease;
+        }
+
+        .page.active {
+            display: flex;
+        }
+
+        /* Page 1 - Question */
+        #page1 {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%);
+        }
+
+        .hearts-bg {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 0;
+        }
+
+        .floating-heart {
+            position: absolute;
+            font-size: 2rem;
+            animation: float 6s ease-in-out infinite;
+            opacity: 0.6;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-30px) rotate(15deg); }
+        }
+
+        .question-container {
+            text-align: center;
+            z-index: 10;
+            padding: 20px;
+        }
+
+        .question-container h1 {
+            font-size: 2.5rem;
+            color: #d63384;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 40px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .buttons {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .btn-yes {
+            padding: 20px 60px;
+            font-size: 1.5rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            background: linear-gradient(45deg, #ff6b6b, #ee5a5a);
+            color: white;
+            box-shadow: 0 10px 30px rgba(238, 90, 90, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .btn-yes:hover {
+            transform: scale(1.1);
+            box-shadow: 0 15px 40px rgba(238, 90, 90, 0.6);
+        }
+
+        .btn-no {
+            padding: 15px 40px;
+            font-size: 1rem;
+            border: 2px solid #ccc;
+            border-radius: 50px;
+            cursor: pointer;
+            background: white;
+            color: #999;
+            transition: all 0.3s ease;
+        }
+
+        .btn-no:hover {
+            transform: scale(0.8);
+            opacity: 0.5;
+        }
+
+        /* Page 2 - Letter */
+        #page2 {
+            background: linear-gradient(135deg, #fff5f5 0%, #ffe4e8 100%);
+        }
+
+        .letter {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+            max-width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+            z-index: 10;
+        }
+
+        .letter::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 5px;
+            background: #ff6b6b;
+            border-radius: 5px;
+        }
+
+        .letter h2 {
+            color: #d63384;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            text-align: center;
+            
+        }
+
+        .letter p {
+            color: #666;
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
+
+        .letter .signature {
+            text-align: right;
+            color: #d63384;
+            font-style: italic;
+            font-size: 1.3rem;
+            margin-top: 30px;
+        }
+
+        .progress-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #ff6b6b, #d63384);
+            transition: width 0.1s linear;
+            z-index: 100;
+        }
+
+        /* Page 3 - Flowers & Music */
+        #page3 {
+            background: #1a1a2e;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Full-screen background slideshow */
+        .bg-slideshow {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        .bg-slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 1.5s ease-in-out;
+            background: linear-gradient(135deg, #1a1a2e 0%, #2d1f3d 50%, #1a1a2e 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .bg-slide.active {
+            opacity: 1;
+        }
+
+        .bg-slide img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        /* Light overlay for text readability */
+        .bg-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                to bottom,
+                rgba(0, 0, 0, 0.1) 0%,
+                rgba(0, 0, 0, 0.15) 50%,
+                rgba(0, 0, 0, 0.25) 100%
+            );
+            z-index: 2;
+        }
+
+        /* Romantic vignette effect */
+        .bg-vignette {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at center, transparent 60%, rgba(0, 0, 0, 0.2) 100%);
+            z-index: 3;
+            pointer-events: none;
+        }
+
+        .celebration {
+            text-align: center;
+            z-index: 10;
+            position: relative;
+        }
+
+        .celebration h1 {
+            font-size: 3rem;
+            color: white;
+            text-shadow: 3px 3px 15px rgba(0,0,0,0.8), 0 0 30px rgba(255,107,107,0.5);
+            margin-bottom: 80px;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { text-shadow: 3px 3px 15px rgba(0,0,0,0.8), 0 0 20px #fff, 0 0 30px #ff6b6b; }
+            to { text-shadow: 3px 3px 15px rgba(0,0,0,0.8), 0 0 30px #fff, 0 0 50px #ff6b6b, 0 0 70px #ff6b6b; }
+        }
+
+        .flowers {
+            font-size: 4rem;
+            margin: 20px 0;
+            animation: sway 3s ease-in-out infinite;
+            filter: drop-shadow(0 0 10px rgba(0,0,0,0.5));
+        }
+
+        @keyframes sway {
+            0%, 100% { transform: rotate(-5deg); }
+            50% { transform: rotate(5deg); }
+        }
+
+        .flower-rain {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        .falling-flower {
+            position: absolute;
+            font-size: 2rem;
+            animation: fall linear infinite;
+        }
+
+        @keyframes fall {
+            0% {
+                transform: translateY(-100px) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0.7;
+            }
+        }
+
+        .music-note {
+            position: absolute;
+            font-size: 2rem;
+            animation: musicFloat 4s ease-in-out infinite;
+            color: white;
+            opacity: 0.8;
+        }
+
+        @keyframes musicFloat {
+            0%, 100% { transform: translateY(0) scale(1); opacity: 0.5; }
+            50% { transform: translateY(-30px) scale(1.2); opacity: 1; }
+        }
+
+        .oof-text {
+            font-size: 5rem;
+            color: white;
+            font-weight: bold;
+            animation: oofPulse 0.5s ease-in-out infinite;
+            text-shadow: 3px 3px 0 #ff6b6b, 6px 6px 0 #d63384;
+        }
+
+        @keyframes oofPulse {
+            0%, 100% { transform: scale(1) rotate(-2deg); }
+            50% { transform: scale(1.1) rotate(2deg); }
+        }
+
+        .love-message {
+            color: white;
+            font-size: 1.5rem;
+            margin-top: 80px;
+            text-shadow: 2px 2px 10px rgba(0,0,0,0.8);
+        }
+
+        .gallery-hearts {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 15;
+        }
+
+        .gallery-heart {
+            position: absolute;
+            animation: heartBurst 2s ease-out forwards;
+            font-size: 2rem;
+        }
+        
+
+        @keyframes heartBurst {
+            0% {
+                transform: scale(0) rotate(0deg);
+                opacity: 1;
+            }
+            50% {
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1.5) rotate(360deg) translateY(-100px);
+                opacity: 0;
+            }
+        }
+
+        .love-sparkle {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background: white;
+            border-radius: 50%;
+            animation: sparkle 1.5s ease-in-out infinite;
+            z-index: 20;
+            pointer-events: none;
+        }
+
+        @keyframes sparkle {
+            0%, 100% { transform: scale(0); opacity: 0; }
+            50% { transform: scale(1); opacity: 1; }
+        }
+
+        .play-music-btn {
+            margin-top: 20px;
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 50px;
+            background: linear-gradient(45deg, #ff6b6b, #ee5a5a);
+            color: white;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            animation: pulseBtn 1.5s ease-in-out infinite;
+            z-index: 100;
+        }
+
+        .play-music-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .play-music-btn.hidden {
+            display: none;
+        }
+
+        @keyframes pulseBtn {
+            0%, 100% { transform: scale(1); box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+            50% { transform: scale(1.05); box-shadow: 0 15px 40px rgba(255,107,107,0.5); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Page 1: Question -->
+    <div id="page1" class="page active">
+        <div class="hearts-bg" id="heartsBg"></div>
+        <div class="question-container">
+            <h1>💕 Will You Be My Valentine? 💕</h1>
+            <div class="buttons">
+                <button class="btn-yes" onclick="goToLetter()">YES! 💖</button>
+                <button class="btn-no" id="noBtn">No</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Page 2: Letter -->
+    <div id="page2" class="page">
+        <div class="letter">
+           <h2> 💌My Dearest Valentine </h2>
+            <p>From the moment I met you, my life has been filled with colors I never knew existed. Your smile lights up my darkest days, and your laughter is the sweetest melody I've ever heard.</p>
+            <p>Every moment with you feels like a beautiful dream I never want to wake up from. You make my heart skip beats and my soul dance with joy.</p>
+            <p>Today and every day, I want you to know how incredibly special you are to me. You are my sunshine, my moonlight, and everything in between.</p>
+            <p>Thank you for being you, for being mine, and for making every day feel like Valentine's Day.</p>
+            <p class="signature">Forever Yours ❤️</p>
+        </div>
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <!-- Page 3: Celebration -->
+    <div id="page3" class="page">
+        <!-- Background Photo Slideshow -->
+        <div class="bg-slideshow" id="bgSlideshow">
+            <!-- Photos will be loaded from JavaScript -->
+        </div>
+        <div class="bg-overlay"></div>
+        <div class="bg-vignette"></div>
+        
+        <div class="flower-rain" id="flowerRain"></div>
+        <div class="gallery-hearts" id="galleryHearts"></div>
+        
+        <div class="celebration">
+            <h1>You're My Valentine! 💕</h1>
+          
+            <div class="love-message">A Thousand Years... and forever more 🥰</div>
+        </div>
+    </div>
+
+    <!-- A Thousand Years - Christina Perri -->
+    <audio id="loveSound" loop>
+        <source src="Christina_Perri_-_A_Thousand_Years_[Official_Music_Video](256k).mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        // ============================================
+        // 📸 ADD YOUR PHOTOS HERE! 📸
+        // ============================================
+        // Just add the photo filenames to this array
+        // Put your photos in the same folder as this HTML file
+        const photos = [
+            '1.jpg',
+            '2.jpg',
+            '3.jpg',
+            '4.jpg',
+            '5.jpg',
+            '6.jpg',
+            '7.jpeg',
+            '8.jpeg',
+            '9.jpeg',
+            '10.jpeg',
+            '11.jpeg',
+            '12.jpeg',
+            '13.jpeg',
+            '14.jpeg',
+            '15.jpeg',
+            '16.jpeg',
+            '17.jpeg'
+        ];
+        // ============================================
+
+        // Create photo gallery slides as fullscreen background
+        function createGallerySlides() {
+            const bgSlideshow = document.getElementById('bgSlideshow');
+            
+            photos.forEach((photo, index) => {
+                // Create background slide
+                const slide = document.createElement('div');
+                slide.className = 'bg-slide' + (index === 0 ? ' active' : '');
+                
+                const img = document.createElement('img');
+                img.src = photo;
+                img.alt = 'Our Memory ' + (index + 1);
+                img.onerror = function() {
+                    // If image fails to load, show gradient background
+                    this.parentElement.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 50%, #ff6b9d 100%)';
+                    this.remove();
+                };
+                slide.appendChild(img);
+                bgSlideshow.appendChild(slide);
+            });
+        }
+        createGallerySlides();
+
+        // Create floating hearts background
+        function createFloatingHearts() {
+            const container = document.getElementById('heartsBg');
+            const hearts = ['💕', '💖', '💗', '💓', '💝', '❤️', '💘'];
+            
+            for (let i = 0; i < 20; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'floating-heart';
+                heart.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+                heart.style.left = Math.random() * 100 + '%';
+                heart.style.top = Math.random() * 100 + '%';
+                heart.style.animationDelay = Math.random() * 5 + 's';
+                heart.style.fontSize = (Math.random() * 2 + 1) + 'rem';
+                container.appendChild(heart);
+            }
+        }
+        createFloatingHearts();
+
+        // No button runs away
+        const noBtn = document.getElementById('noBtn');
+        noBtn.addEventListener('mouseover', moveNoButton);
+        noBtn.addEventListener('touchstart', moveNoButton);
+
+        function moveNoButton() {
+            const maxX = window.innerWidth - noBtn.offsetWidth - 50;
+            const maxY = window.innerHeight - noBtn.offsetHeight - 50;
+            noBtn.style.position = 'fixed';
+            noBtn.style.left = Math.random() * maxX + 'px';
+            noBtn.style.top = Math.random() * maxY + 'px';
+        }
+
+        // Go to letter page
+        function goToLetter() {
+            // Start music from the beginning when clicking YES
+            playLoveSound();
+            document.getElementById('page1').classList.remove('active');
+            document.getElementById('page2').classList.add('active');
+            startAutoProgress();
+        }
+
+        // Auto progress with hold to stay
+        let progressInterval;
+        let progress = 0;
+        let isHolding = false;
+
+        function startAutoProgress() {
+            const progressBar = document.getElementById('progressBar');
+            progress = 0;
+            
+            progressInterval = setInterval(() => {
+                if (!isHolding) {
+                    progress += 1;
+                    progressBar.style.width = progress + '%';
+                    
+                    if (progress >= 100) {
+                        clearInterval(progressInterval);
+                        goToCelebration();
+                    }
+                }
+            }, 50); // 5 seconds total (100 * 50ms)
+        }
+
+        // Hold events
+        const page2 = document.getElementById('page2');
+
+        // Mouse events
+        page2.addEventListener('mousedown', () => { isHolding = true; });
+        page2.addEventListener('mouseup', () => { isHolding = false; });
+        page2.addEventListener('mouseleave', () => { isHolding = false; });
+
+        // Touch events
+        page2.addEventListener('touchstart', (e) => { 
+            isHolding = true; 
+            e.preventDefault();
+        });
+        page2.addEventListener('touchend', () => { isHolding = false; });
+        page2.addEventListener('touchcancel', () => { isHolding = false; });
+
+        // Go to celebration page
+        function goToCelebration() {
+            document.getElementById('page2').classList.remove('active');
+            document.getElementById('page3').classList.add('active');
+            createFlowerRain();
+            // Music already playing from page 1
+            startGallerySlideshow();
+            createSparkles();
+        }
+
+        // Create falling flowers
+        function createFlowerRain() {
+            const container = document.getElementById('flowerRain');
+            const flowers = [];
+            
+            function addFlower() {
+                const flower = document.createElement('div');
+                flower.className = 'falling-flower';
+                flower.textContent = flowers[Math.floor(Math.random() * flowers.length)];
+                flower.style.left = Math.random() * 100 + '%';
+                flower.style.animationDuration = (Math.random() * 3 + 3) + 's';
+                flower.style.fontSize = (Math.random() * 2 + 1.5) + 'rem';
+                container.appendChild(flower);
+                
+                setTimeout(() => flower.remove(), 6000);
+            }
+            
+            // Initial burst
+            for (let i = 0; i < 30; i++) {
+                setTimeout(addFlower, i * 100);
+            }
+            
+            // Continuous rain
+            setInterval(addFlower, 200);
+
+            // Add floating music notes
+            for (let i = 0; i < 10; i++) {
+                const note = document.createElement('div');
+                note.className = 'music-note';
+                note.textContent = ['🎵', '🎶', '🎼'][Math.floor(Math.random() * 3)];
+                note.style.left = Math.random() * 100 + '%';
+                note.style.top = Math.random() * 100 + '%';
+                note.style.animationDelay = Math.random() * 4 + 's';
+                container.appendChild(note);
+            }
+        }
+
+        // Play A Thousand Years from the beginning
+        function playLoveSound() {
+            const audio = document.getElementById('loveSound');
+            audio.currentTime = 0; // Start from beginning
+            audio.volume = 0.7;
+            audio.play().catch(e => console.log('Audio started'));
+        }
+
+        // Photo Gallery
+        let currentSlide = 0;
+        let slides;
+        const heartsContainer = document.getElementById('galleryHearts');
+
+        function goToSlide(index) {
+            slides = document.querySelectorAll('.bg-slide');
+            
+            if (slides[currentSlide]) slides[currentSlide].classList.remove('active');
+            
+            currentSlide = index;
+            
+            if (slides[currentSlide]) slides[currentSlide].classList.add('active');
+            
+            // Burst hearts on slide change
+            burstHearts();
+        }
+
+        function nextSlide() {
+            slides = document.querySelectorAll('.bg-slide');
+            const next = (currentSlide + 1) % slides.length;
+            goToSlide(next);
+        }
+
+        // Auto slideshow
+        function startGallerySlideshow() {
+            setInterval(nextSlide, 3000); // Change every 3 seconds
+        }
+
+        // Burst hearts effect
+        function burstHearts() {
+            const hearts = ['💕', '💖', '💗', '💓', '💝', '❤️', '💘', '💞'];
+            for (let i = 0; i < 8; i++) {
+                setTimeout(() => {
+                    const heart = document.createElement('div');
+                    heart.className = 'gallery-heart';
+                    heart.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+                    heart.style.left = (Math.random() * 100) + '%';
+                    heart.style.top = (Math.random() * 100) + '%';
+                    heartsContainer.appendChild(heart);
+                    setTimeout(() => heart.remove(), 2000);
+                }, i * 100);
+            }
+        }
+
+        // Add sparkles across the page
+        function createSparkles() {
+            const page3 = document.getElementById('page3');
+            for (let i = 0; i < 20; i++) {
+                const sparkle = document.createElement('div');
+                sparkle.className = 'love-sparkle';
+                sparkle.style.left = (Math.random() * 100) + '%';
+                sparkle.style.top = (Math.random() * 100) + '%';
+                sparkle.style.animationDelay = (Math.random() * 1.5) + 's';
+                page3.appendChild(sparkle);
+            }
+        }
+    </script>
+</body>
+</html>

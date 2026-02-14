@@ -14,7 +14,6 @@
         body {
             font-family: 'Georgia', serif;
             overflow: hidden;
-            touch-action: none;
         }
 
         .page {
@@ -37,6 +36,7 @@
         /* Page 1 - Question */
         #page1 {
             background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%);
+            touch-action: none;
         }
 
         .hearts-bg {
@@ -121,6 +121,8 @@
         /* Page 2 - Letter */
         #page2 {
             background: linear-gradient(135deg, #fff5f5 0%, #ffe4e8 100%);
+            touch-action: pan-y;
+            overflow: auto;
         }
 
         .letter {
@@ -187,6 +189,7 @@
             background: #1a1a2e;
             position: relative;
             overflow: hidden;
+            touch-action: none;
         }
 
         /* Full-screen background slideshow */
@@ -574,7 +577,7 @@
                         goToCelebration();
                     }
                 }
-            }, 50); // 5 seconds total (100 * 50ms)
+            }, 200); // 20 seconds total (100 * 200ms)
         }
 
         // Hold events

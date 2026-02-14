@@ -131,7 +131,7 @@
             max-width: 90%;
             max-height: 80vh;
             overflow-y: auto;
-              -webkit-overflow-scrolling: touch;
+            -webkit-overflow-scrolling: touch;
             touch-action: pan-y;
             position: relative;
             z-index: 10;
@@ -579,18 +579,31 @@
 
         // Hold events
         const page2 = document.getElementById('page2');
+        let lastTap = 0;
+        let doubleTapTimer = null;
 
         // Mouse events
         page2.addEventListener('mousedown', () => { isHolding = true; });
         page2.addEventListener('mouseup', () => { isHolding = false; });
         page2.addEventListener('mouseleave', () => { isHolding = false; });
 
-        // Touch events
+        // Touch events - double tap to hold, single tap to scroll
         page2.addEventListener('touchstart', (e) => { 
-            isHolding = true; 
-            e.preventDefault();
+            const currentTime = new Date().getTime();
+            const tapLength = currentTime - lastTap;
+            
+            if (tapLength < 300 && tapLength > 0) {
+                // Double tap detected - hold the page
+                isHolding = true;
+                if (doubleTapTimer) clearTimeout(doubleTapTimer);
+            }
+            lastTap = currentTime;
         });
-        page2.addEventListener('touchend', () => { isHolding = false; });
+        page2.addEventListener('touchend', () => { 
+            if (isHolding) {
+                isHolding = false;
+            }
+        });
         page2.addEventListener('touchcancel', () => { isHolding = false; });
 
         // Go to celebration page
@@ -708,4 +721,3 @@
     </script>
 </body>
 </html>
-
